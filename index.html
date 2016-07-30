@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>jqTree - Checkboxes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+    <link href="jqtree.css" rel="stylesheet" />
+    <style>
+        @font-face {
+    font-family: "Roboto Bold";
+    src: url("font/Roboto-Bold.ttf") format("truetype");
+    font-weight: 900;
+}
+
+@font-face {
+    font-family: "Roboto Condensed Bold";
+    src: url("font/RobotoCondensed-Bold.ttf") format("truetype");
+    font-weight: 900;
+}
+
+@font-face {
+    font-family: "Roboto Light";
+    src: url("font/Roboto-Light.ttf") format("truetype");
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: "Roboto Regular";
+    src: url("font/Roboto-Regular.ttf") format("truetype");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "RobotoCondensed Regular";
+    src: url("font/RobotoCondensed-Regular.ttf") format("truetype");
+    font-weight: 400;
+}
+
+
+html {
+    font-size: 88%;
+    font-family: "Roboto Regular";
+}
+
+    </style>
+</head>
+
+<body>
+    <div style="margin:0 auto;max-width:500px">
+    <div class="accordion-details" id="dvSubMain">
+    </div></div>
+    <script src="jquery.min.js"></script>
+    <script src="tree.jquery.js"></script>
+    <script>
+        $(document).ready(function() {
+            var data = [{
+                name: 'node1',
+                can_check: false,
+                id: 1,
+                children: [{
+                    name: 'child1',
+                    can_check: true,
+                    id: 11,
+                    children: [{
+                        name: 'child3',
+                        can_check: true,
+                        is_checked: true,
+                        id: 111,
+                    }, {
+                        name: 'child3',
+                        can_check: true,
+                        id: 112,
+                    }, {
+                        name: 'child3',
+                        can_check: true,
+                        id: 113,
+                    }]
+                }, {
+                    name: 'child2',
+                    can_check: true,
+                    id: 12,
+                    children: [{
+                        name: 'child3',
+                        can_check: true,
+                        id: 121,
+                    }, {
+                        name: 'child3',
+                        can_check: true,
+                        id: 122,
+                    }, {
+                        name: 'child3',
+                        can_check: true,
+                        id: 123,
+                    }, {
+                        name: 'child3',
+                        can_check: true,
+                        id: 124,
+                    }, {
+                        name: 'child3',
+                        can_check: true,
+                        id: 125,
+                    }]
+                }]
+            }, {
+                name: 'node2',
+                can_check: false,
+                id: 2,
+                children: [{
+                    name: 'child3',
+                    can_check: false,
+                    id: 21,
+                    children: [{
+                        name: 'child3',
+                        can_check: true,
+                        id: 221,
+                        children: [{
+                            name: 'child3',
+                            can_check: false,
+                            id: 2211,
+                        }, {
+                            name: 'child3',
+                            can_check: true,
+                            id: 2212,
+                        }, {
+                            name: 'child3',
+                            can_check: false,
+                            id: 2213,
+                        }, {
+                            name: 'child3',
+                            can_check: true,
+                            id: 2214,
+                        }, {
+                            name: 'child3',
+                            can_check: true,
+                            id: 2215,
+                        }]
+                    }, {
+                        name: 'child3',
+                        can_check: true,
+                        id: 222,
+                    }, {
+                        name: 'child3',
+                        can_check: true,
+                        id: 223,
+                    }, {
+                        name: 'child3',
+                        can_check: true,
+                        id: 224,
+                    }, {
+                        name: 'child3',
+                        can_check: true,
+                        id: 225,
+                    }]
+                }]
+            }];
+
+            $('#dvSubMain').tree({
+                data: data,
+                buttonLeft: false,
+                selectable: false,
+                onCreateLi: function(node, $li) {
+                    // Append a link to the jqtree-element div.
+                    // The link has an url '#node-[id]' and a data property 'node-id'.
+                    var isChecked = '';
+                    if(node.is_checked){
+                        isChecked = 'checked="checked"';
+                    }
+                    if (node.can_check) {
+                        $li.find('.jqtree-element').prepend(
+                            '<input type="checkbox" class="edit js-node-check" data-node-id="' + node.id + '" '+isChecked+'/>'
+                        );
+                    }
+                }
+            }).on('tree.click', function(e){
+                if(e.node.is_open){
+                    $('#dvSubMain').tree('closeNode', e.node);
+                } else {
+                    $('#dvSubMain').tree('openNode', e.node);
+                }
+                
+            });
+
+            $('.js-node-check').on('change', function(e) {
+                var nodeId = $(this).data('nodeId');
+
+                var thisNode = $('#dvSubMain').tree('getNodeById', nodeId);
+                var isChecked = $(this).prop('checked');
+                thisNode.is_checked = isChecked;
+
+                if (thisNode.hasOwnProperty('children') && thisNode.children.length > 0) {
+                    if (isChecked) {
+                        $(this).parent().next().find('.js-node-check').prop('checked', true).trigger('change');
+                    } else {
+                        $(this).parent().next().find('.js-node-check').prop('checked', false).trigger('change');
+                    }
+                }
+            }).on('click', function(e){
+                var nodeId = $(this).data('nodeId');
+                var thisNode = $('#dvSubMain').tree('getNodeById', nodeId);
+
+                if(thisNode.is_open){
+                    e.stopPropagation();
+                }
+            });;
+        });
+    </script>
+</body>

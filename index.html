@@ -5,53 +5,56 @@
     <title>jqTree - Checkboxes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 
-    <link href="jqtree.css" rel="stylesheet" />
+    <link href="css/jqtree.css" rel="stylesheet" />
     <style>
         @font-face {
-    font-family: "Roboto Bold";
-    src: url("font/Roboto-Bold.ttf") format("truetype");
-    font-weight: 900;
-}
+            font-family: "Roboto Bold";
+            src: url("font/Roboto-Bold.ttf") format("truetype");
+            font-weight: 900;
+        }
+        
+        @font-face {
+            font-family: "Roboto Condensed Bold";
+            src: url("font/RobotoCondensed-Bold.ttf") format("truetype");
+            font-weight: 900;
+        }
+        
+        @font-face {
+            font-family: "Roboto Light";
+            src: url("font/Roboto-Light.ttf") format("truetype");
+            font-weight: 100;
+        }
+        
+        @font-face {
+            font-family: "Roboto Regular";
+            src: url("font/Roboto-Regular.ttf") format("truetype");
+            font-weight: 400;
+        }
+        
+        @font-face {
+            font-family: "RobotoCondensed Regular";
+            src: url("font/RobotoCondensed-Regular.ttf") format("truetype");
+            font-weight: 400;
+        }
+        
+        html {
+            font-size: 88%;
+            font-family: "Roboto Regular";
+        }
 
-@font-face {
-    font-family: "Roboto Condensed Bold";
-    src: url("font/RobotoCondensed-Bold.ttf") format("truetype");
-    font-weight: 900;
-}
-
-@font-face {
-    font-family: "Roboto Light";
-    src: url("font/Roboto-Light.ttf") format("truetype");
-    font-weight: 100;
-}
-
-@font-face {
-    font-family: "Roboto Regular";
-    src: url("font/Roboto-Regular.ttf") format("truetype");
-    font-weight: 400;
-}
-
-@font-face {
-    font-family: "RobotoCondensed Regular";
-    src: url("font/RobotoCondensed-Regular.ttf") format("truetype");
-    font-weight: 400;
-}
-
-
-html {
-    font-size: 88%;
-    font-family: "Roboto Regular";
-}
-
+        #btnGetChecked {
+            margin-top: 20px;
+        }
     </style>
 </head>
 
 <body>
-    <div style="margin:0 auto;max-width:500px">
-    <div class="accordion-details" id="dvSubMain">
-    </div></div>
-    <script src="jquery.min.js"></script>
-    <script src="tree.jquery.js"></script>
+    <div style="margin:0 auto;max-width:500px;text-align:center;">
+        <div class="accordion-details" id="dvSubMain">
+        </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/tree.jquery.js"></script>
     <script>
         $(document).ready(function() {
             var data = [{
@@ -163,22 +166,22 @@ html {
                     // Append a link to the jqtree-element div.
                     // The link has an url '#node-[id]' and a data property 'node-id'.
                     var isChecked = '';
-                    if(node.is_checked){
+                    if (node.is_checked) {
                         isChecked = 'checked="checked"';
                     }
                     if (node.can_check) {
                         $li.find('.jqtree-element').prepend(
-                            '<input type="checkbox" class="edit js-node-check" data-node-id="' + node.id + '" '+isChecked+'/>'
+                            '<input type="checkbox" class="edit js-node-check" data-node-id="' + node.id + '" ' + isChecked + '/>'
                         );
                     }
                 }
-            }).on('tree.click', function(e){
-                if(e.node.is_open){
+            }).on('tree.click', function(e) {
+                if (e.node.is_open) {
                     $('#dvSubMain').tree('closeNode', e.node);
                 } else {
                     $('#dvSubMain').tree('openNode', e.node);
                 }
-                
+
             });
 
             $('.js-node-check').on('change', function(e) {
@@ -195,14 +198,14 @@ html {
                         $(this).parent().next().find('.js-node-check').prop('checked', false).trigger('change');
                     }
                 }
-            }).on('click', function(e){
+            }).on('click', function(e) {
                 var nodeId = $(this).data('nodeId');
                 var thisNode = $('#dvSubMain').tree('getNodeById', nodeId);
 
-                if(thisNode.is_open){
+                if (thisNode.is_open) {
                     e.stopPropagation();
                 }
-            });;
+            });
         });
     </script>
 </body>
